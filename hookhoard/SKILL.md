@@ -5,7 +5,7 @@ description: Make, fill, label and use mood boards and swipe files in the user's
 
 # HookHoard
 
-HookHoard keeps the user's boards in their own Chrome browser. You reach them through the `hookhoard` MCP tools: `list_boards`, `get_board`, `get_item_image`, `create_board`, `add_images`, `set_item_tags`, `add_note`, `add_shot_list`, `search_items`. The MCP prompts `tag-my-swipes`, `shot-list-from-board`, `brief-from-board` and `board-from-brief` carry the label lists and step-by-step flows.
+HookHoard keeps the user's boards in their own Chrome browser. You reach them through the `hookhoard` MCP tools: `list_boards`, `get_board`, `get_item_image`, `create_board`, `add_images`, `set_item_tags`, `get_item_transcript`, `set_item_beats`, `add_note`, `add_shot_list`, `search_items`. The MCP prompts `tag-my-swipes`, `break-down-video-ad`, `shot-list-from-board`, `brief-from-board` and `board-from-brief` carry the label lists and step-by-step flows.
 
 If these tools are not available in this session, say the HookHoard connection is not set up (the HookHoard side panel, "Connect your AI") and stop. Do not pretend.
 
@@ -40,6 +40,10 @@ Read the ad in the order a viewer meets it. Look at the image first (`get_item_i
 5. **Proof.** What makes the claim believable: a number, a real person, a result, a demo, a logo, a review? Name it, or note that none is shown.
 
 Then label it. Read the closed id lists for this board type from the MCP now (the `tag-my-swipes` prompt, or the error from a bad `set_item_tags` call lists them) and use the definitions that come with the ids, not just the names. On an ads board the label has two parts. Lists: format, mechanic, hook type, awareness, ad type, up to 3 principles (lead one first: pick the 1 to 3 principle groups that hold the reasons it persuades, then principles only inside them), up to 2 techniques, creative principle, positioning, proof, offer type, emotion. Text: the hook line word for word, the offer, and the why. Use null or an empty list whenever nothing clearly fits, and never invent an id. The call to action, ad copy and days running come from the item data in `get_board`; read them, do not guess. Fields the user edited by hand are kept; the tool tells you which.
+
+## Breaking down a video ad (free)
+
+A saved video (`isVideo: true` in `get_board`) has a transcript made in the user's own browser. `get_item_transcript` with `transcribe: true` returns what is said with timestamps (it runs HookHoard's on-device speech model if there is no transcript yet; if it answers that the speech model is not approved, tell the user to click Transcribe once on that video in HookHoard, then call again). Then `set_item_beats` saves `hookLine` (the opening line word for word, never paraphrased), `hookType` and 3 to 8 beats in time order, each `{label, text, start, end}` in seconds taken from the transcript. The beat labels and hook type ids are listed in the tool descriptions and in the `break-down-video-ad` prompt: read them, never write them from memory. Never invent words that are not in the transcript. If the transcript is empty or the video is silent, say so and break it down from the picture instead (follow "Breaking down an ad").
 
 ## Writing "why it works"
 
